@@ -1,0 +1,49 @@
+$donut-width: 50%;
+.fill-brand-info{
+  fill: $brand-info;
+}
+.fill-gray{
+  fill: $gray;
+}
+.fill-danger{
+  fill: $brand-danger;
+}
+.fill-success{
+  fill: $brand-success;
+}
+.fill-warning{
+  fill: $brand-warning;
+}
+
+svg.svg-content-responsive-pie{
+  display: block;
+  margin: auto;
+  width: $donut-width;
+  height: $donut-width;
+  padding: 2%;
+  overflow: visible;
+}
+
+.fill-blue{
+  fill: $vantiv-blue;
+}
+
+.fill-teal{
+  fill: $vantiv-teal;
+}
+
+.fill-orange-yellow{
+  fill: $vantiv-orange-yellow;
+}
+
+.fill-red{
+  fill: $vantiv-red;
+}
+.fill-gray-light{
+  fill: $gray-light;
+}
+
+
+#donutid{
+  background-color:white;
+}
