@@ -1,89 +1,58 @@
-import donutChart from 'donut';
+import stackChart from 'stacked';
 import * as d3 from "d3";
 
 
-describe("The donut chart", function(){
+describe("The stack chart", function(){
 
-	
-	jasmine.clock().install();
 	window.d3 = d3;
+	jasmine.clock().install();
 
-	var jsonData = [
-	  {
-	    "mcc_name": "Department Store",
-	    "avg_fee": 0.29486
-	  },
-	  {
-	    "mcc_name": "Grocery",
-	    "avg_fee": 0.29486
-	  },
-	  {
-	    "mcc_name": "Family Clothing",
-	    "avg_fee": 0.29486
-	  },
-	  {
-	    "mcc_name": "Fast Food",
-	    "avg_fee": 0.29486
-	  },
-	  {
-	    "mcc_name": "Pharmacies",
-	    "avg_fee": 0.29486
-	  }
-	];
+	var data= [ { "All Others": 0.2,
+	  "Department Store": 0.2,
+	  "Family Clothing": 0.2,
+	  "Fast Food": 0.2,
+	  "Grocery": 0.1,
+	  "Pharmacies": 0.1,
+	  total: 1 } ];
+		data.columns = Object.keys(data[0]).filter(function (obj){
+		  return obj != "total";
+		})
 
-	var valueFunction = function(d){
-	  return d.avg_fee;
-	}
-	var constancyFunction = function(d){
-	  return d.mcc_name;
-	}
-	var classMapFunction = function(d){
-	  return classMap[d.data.mcc_name];
-	}
-
-	//This data would be received by the controller
-	//where txn_type = sig_debit and fi= "My Financial Institution"
-	var classMap = {"Department Store": "fill-blue", "Grocery": "fill-red",
-	 "Family Clothing": "fill-gray-light", "Fast Food": "fill-orange-yellow",
-	  "Pharmacies": "fill-teal"};
-
-	var innerNumber = 0;
-	jsonData.forEach(function(d,j){
-	  innerNumber += d.avg_fee;
-	});
-
-
-	innerNumber = innerNumber / jsonData.length;
 
 	beforeEach (function(){
 
 		var svg = d3.select("body")
 		  .append("div")
-		  .classed("svg-container", true)
-		  .append("svg")
-		  .attr("viewBox", "0 0 " + 500 + " " + 500)
-		  //class for responsivenesss
-		  .classed("svg-content-responsive-pie", true)
-		  .attr("width", 500)
-		  .attr("height", 500)
-		  .append("g")
-		  .attr("id", "donutchart")
-		  .attr("transform", "translate(" + 500 / 2 + "," + 500 / 2 + ")")
+			.classed("svg-container", true)
+			.append("svg")
+			.attr("preserveAspectRatio", "xMinYMin meet")     
+			.attr("viewBox","0 0 " + 900 + " " + 300)
+			//class to make it responsive
+			.classed("svg-content-responsive", true)
 		;
 
-		var test = donutChart()
-		  .classMap(classMap)
-		  .valueFunction(valueFunction)
-		  .constancyFunction(constancyFunction)
+		var margin = {top: 30, right: 40, bottom: 50, left: 40};
+		var width =900;
+		var height =300;
+
+		var classMap =  {"Department Store": "fill-blue bar", "Grocery": "fill-red bar",
+		"Family Clothing": "fill-gray-light bar", "Fast Food": "fill-orange-yellow bar",
+		"Pharmacies": "fill-teal bar", "All Others": "fill-gray-dark bar" };
+
+
+		var classMapFunction = function (d){
+			return classMap[ d.key ];
+		}
+
+		var testStack = stackChart()
+		  .margin(margin)
+		  .width(width)
+		  .height(height)
 		  .classMapFunction(classMapFunction)
-		  .innerRad(50)
-		  .innerNumber(innerNumber)
-		  .innerText("AVG INTERCHANGE")
-		  .padAngle(0.03)
+		  .classMap(classMap)
 		;
 
-		test(svg, jsonData);
-	
+		testStack(svg, data)
 	});
 
 	afterEach ( function(){
@@ -95,61 +64,43 @@ describe("The donut chart", function(){
 		expect(d3.selectAll('svg')._groups[0][0]).toBeDefined();			
 	});
 
-	it('should create the correct amount of paths', function() { 
-		expect(d3.selectAll('path')._groups[0].length).toEqual(5);
+	it('should create the correct amount of bars', function() { 
+		expect(d3.selectAll('.bar')._groups[0].length).toEqual(6);
 	});
 
-	it('should create every path with one class', function() {		
+	it('should create every bar with two classes', function() {		
 		var classes = 0;
-			var paths = d3.selectAll('path')._groups[0];
+			var bars = d3.selectAll('.bar')._groups[0];
 			
-			for(var i =0; i< paths.length; i++){
-				classes = classes + paths[i].classList.length
+			for(var i =0; i< bars.length; i++){
+				classes = classes + bars[i].classList.length
 			}
-		expect( classes).toEqual(5);
+		expect( classes).toEqual(12);
 
 	});
 
-	it('should create every path with a valid class', function() {	
-		var paths = d3.selectAll('path')._groups[0];
-		var test = true;
-
-			for(var i =0; i< paths.length; i++){
-				if ( !(paths[i].classList == "fill-blue" ||
-						 paths[i].classList == "fill-red" ||
-						 paths[i].classList == "fill-gray-light" ||
-						 paths[i].classList == "fill-orange-yellow" ||
-						 paths[i].classList == "fill-teal" )
-					  	&& test == true){
-					test = false
-				}//end if
-			}
-		expect (test).toBe(true);
-	});
-
-
-	it('should have the correct number of HTML text tags', function() {
-		expect(d3.selectAll('text')._groups[0].length).toBe(2);
-	});
-
-	it('should have the correct text', function(done) {
-		expect(d3.selectAll('text')._groups[0].length).toBe(2);
-
-		var allText = d3.selectAll('text')._groups[0];
+	it('should create every bar with a valid class', function(done) {
+		
+		var bars = d3.selectAll('.bar')._groups[0];
 		var test = true;
 
 		setInterval(function(){
-			for (var i =0; i < allText.length; i++){
-				console.log(allText[i].innerHTML)
-				if ( allText[i].innerHTML != "AVG INTERCHANGE" && allText[i].innerHTML != "0.29486" ){
-					test = false;
-				}
-			}
-		}, 2000)
-
-		jasmine.clock().tick(2001 /* a space odyssey */);
-		expect(test).toBe(true);
+			for(var i =0; i< bars.length; i++){		
+				if ( !(bars[i].classList[0] == "fill-blue" ||
+					 bars[i].classList[0] == "fill-red" ||
+					 bars[i].classList[0] == "fill-gray-light" ||
+					 bars[i].classList[0] == "fill-orange-yellow" ||
+					 bars[i].classList[0] == "fill-teal" || 
+					 bars[i].classList[0] == "fill-gray-dark" ) && test == true){
+						test = false
+				}//end if
+			}//end for
+		
+	}, 2000)
+		jasmine.clock().tick(2001 /* a space odyssey*/);
+		expect (test).toBe(true);
 		done();
+
 	});
 
 });

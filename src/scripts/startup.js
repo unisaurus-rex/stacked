@@ -26,6 +26,15 @@ var svg = d3.select("#stackid")  .append("div")
   .classed("svg-content-responsive", true)
 ;
 
+  var classMapFunction = function (d){
+    return classMap[ d.key ];
+  }
+
+  var classMap =  {"Department Store": "fill-blue", "Grocery": "fill-red",
+  "Family Clothing": "fill-gray-light", "Fast Food": "fill-orange-yellow",
+  "Pharmacies": "fill-teal", "All Others": "fill-gray-dark" };
+
+
 
 var margin = {top: 30, right: 40, bottom: 50, left: 40};
 var width =900;

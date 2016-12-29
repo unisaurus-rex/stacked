@@ -15,7 +15,6 @@ export default function stackChart(){
 	var z = d3.scaleOrdinal(d3.schemeCategory20);
 	// stuff to pass to config
 	var classMapFunction = function (d){
-		console.log(d);
 	  return classMap[ d.key ];
 	}
 
@@ -54,7 +53,6 @@ function chart(svg, data){
 	g.selectAll(".serie")
 	.data(stack.keys(data.columns.slice(0))(data))
 	.enter().append("g")
-	  .attr("class", "serie")
 	  .attr("transform", "translate(0," + transformY + ")")
 	  .attr("class", classMapFunction)
 	.selectAll("rect")
