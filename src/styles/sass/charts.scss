@@ -14,6 +14,9 @@ $donut-width: 50%;
 .fill-warning{
   fill: $brand-warning;
 }
+.fill-gray-dark{
+  fill: $gray-dark;
+}
 
 svg.svg-content-responsive-pie{
   display: block;
@@ -47,3 +50,4 @@ svg.svg-content-responsive-pie{
 #donutid{
   background-color:white;
 }
+

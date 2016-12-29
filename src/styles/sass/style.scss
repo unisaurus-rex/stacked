@@ -177,3 +177,7 @@ $font-family-base: Foundry Context;
 .btn-gray-light{
    @include button-variant($btn-gray-light-color, $btn-gray-light-bg, $btn-gray-light-border);
 }
+
+.btn-gray-dark{
+   @include button-variant($btn-gray-dark-color, $btn-gray-dark-bg, $btn-gray-dark-border);
+}
