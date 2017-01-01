@@ -113,8 +113,8 @@ width (int)
 height (int)
 * Sets the max height of the chart
 
-margin (object with key value pairs, where the keys are top, left, right, and bottom and the value is the margin that should be applied)
-* Sets the margins of the chart
+margin (key/values)
+* The keys are top, left, right, and bottom and the value is the margin that should be applied
 
 classMap (key/values)
 * Object holding key-value pairs where key is the rowId and the value is the class that will be applied.
@@ -146,6 +146,11 @@ var data= [ { "All Others": 0.2,
   "Grocery": 0.1,
   "Pharmacies": 0.1,
   total: 1 } ];
+
+//add columns attribute
+data.columns = Object.keys(data[0]).filter(function (obj){
+  return obj != "total";
+})
 ```
 #### Define variables to be passed to setters
 ```
