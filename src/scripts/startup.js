@@ -22,8 +22,6 @@ var svg = d3.select("#stackid")  .append("div")
   .append("svg")
   .attr("preserveAspectRatio", "xMinYMin meet")     
   .attr("viewBox","0 0 " + 900 + " " + 300)
-  //class to make it responsive
-  .classed("svg-content-responsive", true)
 ;
 
   var classMapFunction = function (d){
@@ -44,6 +42,8 @@ var testStack = stackChart()
   .margin(margin)
   .width(width)
   .height(height)
+  .classMap(classMap)
+  .classMapFunction(classMapFunction)
 ;
 
 testStack(svg, data);

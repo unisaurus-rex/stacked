@@ -94,10 +94,13 @@ When you try to run your new spec, you may encounter errors loading files import
 3) Call the constructor function with optional arguments
 4) The constructor function returns a function that takes two parameters: a selection and data
 
+#### Data Structure
+Data should consist of an object in an array. The object should have key value pairs that map to every segment of the stacked chart. A key value pair should be added that consists of the total of all the other data. The data object should also have a columns attribute that consists of all the keys (excluding the total key value pair). 
+
 Example: 
 ``` 
-import donutChart from 'donut/donut.js';
-var function = donutchart();
+import stackChart from 'stacked';
+var function = stackChart();
 ```
 
 ## Configuration
@@ -110,24 +113,8 @@ width (int)
 height (int)
 * Sets the max height of the chart
 
-innerText (string)
-* Sets the inner text string that will be displayed in the center of the chart
-
-innerRad (int)
-* Set the inner radius of the chart
-
-hoverRad (int)
-* Set the value that will be added to the radius on hover
-
-padAngle (float)
-* Set the padding between arcs (value between 0 and 1)
-
-constancyFunction (function)
-* Key function for object constancy. 
-  * More details can be found here: https://bost.ocks.org/mike/constancy/
-
-valueFunction (function)
-* Accessor function that returns the numerical value to be charted
+margin (object with key value pairs, where the keys are top, left, right, and bottom and the value is the margin that should be applied)
+* Sets the margins of the chart
 
 classMap (key/values)
 * Object holding key-value pairs where key is the rowId and the value is the class that will be applied.
@@ -135,80 +122,53 @@ classMap (key/values)
 classMapFunction (function)
 * Function that returns the correct value from classMap given a rowId
 
-innerNumber (int or float) 
-* Number that will be displayed in the center
-
 ## Example
 
 #### Importing module and creating svg
 ```
-import donutChart from 'donut/donut.js';
+import stackChart from 'stacked/stacked.js';
 
-var svg = d3.select("div#donutid")
+var svg = d3.select("#stackid")  .append("div")
   .classed("svg-container", true)
   .append("svg")
-  .attr("viewBox", "0 0 " + 500 + " " + 500)
-  //class for responsivenesss
-  .classed("svg-content-responsive-pie", true)
-  .attr("width", 500)
-  .attr("height", 500)
-  .append("g")
-  .attr("id", "donutchart")
-  .attr("transform", "translate(" + 500 / 2 + "," + 500 / 2 + ")")
+  .attr("preserveAspectRatio", "xMinYMin meet")     
+  .attr("viewBox","0 0 " + 900 + " " + 300)
+  //class to make it responsive
+  .classed("svg-content-responsive", true)
 ;
 ```
 #### Example data set
 ```
-var falsyData = [
-  {
-    "mcc_name": "Department Store",
-    "avg_fee": 0.29486
-  },
-  {
-    "mcc_name": "Grocery",
-    "avg_fee": 0.29486
-  },
-  {
-    "mcc_name": "Family Clothing",
-    "avg_fee": 0.29486
-  },
-  {
-    "mcc_name": "Fast Food",
-    "avg_fee": 0.29486
-  },
-  {
-    "mcc_name": "Pharmacies",
-    "avg_fee": 0.29486
-  }
-];
+var data= [ { "All Others": 0.2,
+  "Department Store": 0.2,
+  "Family Clothing": 0.2,
+  "Fast Food": 0.2,
+  "Grocery": 0.1,
+  "Pharmacies": 0.1,
+  total: 1 } ];
 ```
 #### Define variables to be passed to setters
 ```
-var valueFunction = function(d){
-    return d.avg_fee;
+var classMapFunction = function (d){
+  return classMap[ d.key ];
 }
-var constancyFunction = function(d){
-    return d.transactionType;
-}
-var classMapFunction= function(d) {
-    return classMap[d.data.transactionType];
-}
-var classMap = {"declines": "fill-danger", "authorizations": "fill-success", "chargebacks":"fill-warning"};
+var classMap =  {"Department Store": "fill-blue", "Grocery": "fill-red",
+"Family Clothing": "fill-gray-light", "Fast Food": "fill-orange-yellow",
+"Pharmacies": "fill-teal", "All Others": "fill-gray-dark" };
+var margin = {top: 30, right: 40, bottom: 50, left: 40};
+var width =900;
+var height =300;
+
 ```
 #### Configuration and function call
 ```
-var func = donutChart()
-    .width(500)
-    .height(500)
-    .innerText("TOTAL TRANS")
-    .innerRad(60)
-    .hoverRad(15)
-    .padAngle(0.05)
-    .constancyFunction( constancyFunction )
-    .valueFunction( valueFunction )
-    .classMapFunction( classMapFunction )
-    .innerNumber( 0 )
+var testStack = stackChart()
+  .margin(margin)
+  .width(width)
+  .height(height)
+  .classMap(classMap)
+  .classMapFunction(classMapFunction)
 ;
-    func(svg, falsydata); //where selection is a d3 selection
-;
+
+testStack(svg, data);
 ```
