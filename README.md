@@ -95,7 +95,32 @@ When you try to run your new spec, you may encounter errors loading files import
 4) The constructor function returns a function that takes two parameters: a selection and data
 
 #### Data Structure
-Data should consist of an object in an array. The object should have key value pairs that map to every segment of the stacked chart. A key value pair should be added that consists of the total of all the other data. The data object should also have a columns attribute that consists of all the keys (excluding the total key value pair). The total is used to determine the domain of the scales.
+Data should consist of an object and an array within an array. The object should have key value pairs that map to every segment of the stacked chart. A key value pair should be added that consists of the total of all the other data. The data object should also have a columns attribute that consists of all the keys (excluding the "total" key value pair). The total is used to determine the domain of the scales.
+
+Example Data Structure:
+```
+var exampleData = 
+[ 
+  { 
+    "All Others": 0.2, 
+    "Department Store": 0.2, 
+    "Family Clothing": 0.2, 
+    "Fast Food": 0.2, 
+    "Grocery": 0.2, 
+    "Pharmacies": 0.2,
+    total: 1
+  }
+];
+exampleData.columns = 
+[ 
+    "All Others", 
+    "Department Store", 
+    "Family Clothing", 
+    "Fast Food", 
+    "Grocery", 
+    "Pharmacies"
+]
+```
 
 Example: 
 ``` 
